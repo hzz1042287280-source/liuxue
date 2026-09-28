@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#f8fafc">
+<title>你适合去哪个国家留学？｜留学适配度测试</title>
+<style>
+:root{
+  --navy:#1e3a8a;
+  --navy-light:#3b5bc0;
+  --gold:#d97706;
+  --gold-light:#f59e0b;
+  --ink:#0f172a;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --card:#ffffff;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+html,body{
+  margin:0;
+  overscroll-behavior:none;
+  touch-action:manipulation;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  background:linear-gradient(160deg,#f8fafc 0%,#eff6ff 50%,#f0f9ff 100%);
+  background-attachment:fixed;
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  min-height:100dvh;
+  -webkit-touch-callout:none;
+  position:relative;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:'';
+  position:fixed;
+  top:-100px;right:-100px;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(59,91,192,.18),transparent 70%);
+  filter:blur(30px);
+  pointer-events:none;
+  z-index:0;
+}
+body::after{
+  content:'';
+  position:fixed;
+  bottom:-100px;left:-100px;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(217,119,6,.12),transparent 70%);
+  filter:blur(30px);
+  pointer-events:none;
+  z-index:0;
+}
+
+.wrap{
+  max-width:820px;
+  margin:auto;
+  padding:24px 16px calc(40px + env(safe-area-inset-bottom));
+  position:relative;
+  z-index:1;
+}
+
+.hero{padding:44px 6px 28px;text-align:center}
+.kicker{
+  letter-spacing:.16em;
+  font-size:11px;
+  font-weight:600;
+  color:var(--gold);
+}
+h1{
+  font-size:34px;
+  line-height:1.25;
+  margin:14px 0 14px;
+  font-weight:800;
+  letter-spacing:-.02em;
+  color:var(--navy);
+}
+.sub{color:var(--muted);line-height:1.75;font-size:15px}
+
+.card{
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:0 12px 40px rgba(30,58,138,.06);
+  padding:24px 20px;
+  margin-top:16px;
+}
+
+.btn{
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--navy),var(--navy-light));
+  color:#fff;
+  padding:14px 26px;
+  min-height:50px;
+  font-size:16px;
+  font-weight:600;
+  font-family:inherit;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(30,58,138,.25);
+  transition:transform .1s,box-shadow .15s;
+}
+.btn:disabled{opacity:.35;box-shadow:none}
+.btn:active:not(:disabled){
+  transform:scale(.97);
+}
+.btn.secondary{
+  background:#fff;
+  color:var(--muted);
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+.btn.gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  box-shadow:0 8px 22px rgba(217,119,6,.28);
+}
+
+#test:not(.hidden){
+  display:flex;
+  flex-direction:column;
+  min-height:calc(100dvh - 80px);
+}
+.progress{
+  height:5px;
+  background:#e2e8f0;
+  border-radius:10px;
+  overflow:hidden;
+  margin:8px 0 22px;
+}
+.bar{
+  height:100%;
+  background:linear-gradient(90deg,var(--navy),var(--gold));
+  width:0;
+  transition:width .3s;
+}
+.qnum{
+  font-size:12px;
+  color:var(--navy);
+  font-weight:600;
+  letter-spacing:.04em;
+}
+.question{
+  font-size:20px;
+  line-height:1.55;
+  font-weight:700;
+  margin:10px 0 22px;
+  color:var(--ink);
+}
+#opts{flex:1}
+
+.opt{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  width:100%;
+  text-align:left;
+  background:#fff;
+  border:1.5px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+  min-height:58px;
+  margin:10px 0;
+  font-size:15.5px;
+  font-family:inherit;
+  line-height:1.5;
+  color:var(--ink);
+  cursor:pointer;
+  transition:transform .1s,border-color .15s,background .15s,box-shadow .15s;
+}
+.opt-key{
+  flex-shrink:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;height:24px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--navy),var(--navy-light));
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  margin-top:1px;
+}
+.opt-text{flex:1}
+.opt:active{transform:scale(.985);border-color:var(--navy-light)}
+.opt.selected{
+  border-color:var(--navy);
+  background:rgba(30,58,138,.04);
+  box-shadow:0 0 0 3px rgba(30,58,138,.1);
+}
+
+.nav{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:22px;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+.hidden{display:none}
+.resultHero{text-align:center;padding:14px 0 4px}
+.resultName{
+  font-size:44px;
+  font-weight:800;
+  margin:8px 0;
+  color:var(--navy);
+  letter-spacing:-.02em;
+}
+.tag{
+  display:inline-block;
+  border-radius:999px;
+  padding:6px 13px;
+  margin:3px;
+  font-size:12px;
+  font-weight:500;
+  color:var(--navy);
+  background:linear-gradient(135deg,#eff6ff,#fef3c7);
+}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.dim{
+  background:#f8fafc;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+}
+.dimtop{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
+.dimtop b{color:var(--navy)}
+.track{height:8px;background:#e2e8f0;border-radius:8px;margin-top:9px;overflow:hidden}
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--navy),var(--gold));
+  border-radius:8px;
+}
+
+.report h2{
+  font-size:18px;
+  font-weight:700;
+  margin-top:24px;
+  color:var(--navy);
+}
+.report h2::before{
+  content:'';
+  display:inline-block;
+  width:5px;height:15px;
+  border-radius:2px;
+  background:linear-gradient(180deg,var(--navy),var(--gold));
+  margin-right:8px;
+  vertical-align:-2px;
+}
+.report p{line-height:1.85;color:#334155;font-size:15px}
+.report b{color:var(--navy)}
+
+.cta-box{
+  background:linear-gradient(135deg,#eff6ff,#fef3c7);
+  border:1.5px solid #dbeafe;
+  border-radius:18px;
+  padding:22px 18px;
+  margin-top:28px;
+  text-align:center;
+}
+.cta-box h3{
+  font-size:18px;
+  font-weight:800;
+  color:var(--navy);
+  margin:0 0 10px;
+}
+.cta-box p{
+  font-size:14px;
+  color:#475569;
+  line-height:1.7;
+  margin:0 0 16px;
+}
+.cta-box .btn{margin:6px 4px}
+
+.small{font-size:12px;color:var(--muted);line-height:1.7}
+.foot{
+  text-align:center;
+  margin-top:24px;
+  color:var(--muted);
+  font-size:12px;
+  padding-bottom:env(safe-area-inset-bottom);
+  opacity:.85;
+}
+
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr}
+  .card{padding:20px 16px;border-radius:18px}
+  h1{font-size:28px}
+  .question{font-size:19px}
+  .resultName{font-size:40px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section id="intro" class="hero">
+  <div class="kicker">STUDY ABROAD FIT TEST</div>
+  <h1>你适合去哪个国家留学？</h1>
+  <div class="sub">36 道题，从学术、职业、预算、独立、文化、节奏六个维度<br>帮你找到最匹配的留学方向。</div>
+  <div style="margin-top:28px">
+    <button class="btn" onclick="startTest()">开始测试</button>
+  </div>
+  <p class="small" style="margin-top:18px">测试结果仅供参考，具体选校需要结合个人情况综合评估。</p>
+</section>
+
+<section id="test" class="card hidden">
+  <div class="qnum" id="qnum"></div>
+  <div class="progress"><div id="bar" class="bar"></div></div>
+  <div id="qtext" class="question"></div>
+  <div id="opts"></div>
+  <div class="nav">
+    <button id="prev" class="btn secondary" onclick="prevQ()">上一题</button>
+    <button id="next" class="btn" onclick="nextQ()">下一题</button>
+  </div>
+</section>
+
+<section id="result" class="card hidden">
+  <div class="resultHero">
+    <div class="kicker">YOUR BEST MATCH</div>
+    <div id="resultName" class="resultName"></div>
+    <div id="resultTags"></div>
+    <p id="resultDesc" class="sub"></p>
+  </div>
+  <div class="grid" id="dims"></div>
+  <div class="report" id="report"></div>
+
+  <div class="cta-box">
+    <h3>想要更具体的选校建议？</h3>
+    <p>测试只能看到大方向。真实的选校还要看你的专业、GPA、语言成绩和家庭预算。<br>我们的顾问可以帮你做一次一对一评估。</p>
+    <button class="btn gold" onclick="handleConsult()">预约顾问评估</button>
+  </div>
+
+  <div style="text-align:center;margin-top:24px">
+    <button class="btn secondary" onclick="restart()">重新测试</button>
+  </div>
+</section>
+
+<div class="foot">本测试为机构自制内容，结果仅供留学方向参考。<br>具体选校需结合个人实际情况。</div>
+</div>
+
+<script>
+const QUESTIONS=[{"q": "选学校的时候，你最先看什么？", "options": [{"text": "专业排名和学术声誉", "scores": {"A": 3, "S": 2}}, {"text": "毕业后好不好就业", "scores": {"C": 3}}, {"text": "生活成本和生活质量", "scores": {"B": 2, "P": 2}}, {"text": "有没有我喜欢的城市氛围", "scores": {"X": 2, "P": 3}}]}, {"q": "如果让你在下面两种学校之间选，你会？", "options": [{"text": "排名高但压力大的学校", "scores": {"A": 3, "C": 2}}, {"text": "排名普通但氛围轻松的学校", "scores": {"P": 3, "X": 1}}, {"text": "能给奖学金但位置偏的学校", "scores": {"B": 3}}, {"text": "专业强但综合排名不高的学校", "scores": {"A": 2, "C": 2}}]}, {"q": "你怎么看「读研要不要选热门专业」？", "options": [{"text": "选热门，就业更稳", "scores": {"C": 3, "A": 1}}, {"text": "选自己感兴趣的，学得下去才重要", "scores": {"X": 2, "P": 2}}, {"text": "看这个专业在当地好不好移民", "scores": {"C": 3}}, {"text": "看这个专业有没有真正的学术价值", "scores": {"A": 3}}]}, {"q": "你更希望读书期间获得什么？", "options": [{"text": "扎实的专业知识和研究能力", "scores": {"A": 3}}, {"text": "一张含金量高的文凭", "scores": {"C": 3}}, {"text": "一段完全不同的生活体验", "scores": {"X": 3, "I": 1}}, {"text": "一群能长期联系的朋友和人脉", "scores": {"I": 2, "X": 1}}]}, {"q": "毕业后你的第一打算是？", "options": [{"text": "尽量留在当地工作", "scores": {"C": 3, "I": 2}}, {"text": "积累两年经验再回国", "scores": {"C": 2, "A": 1}}, {"text": "直接回国发展", "scores": {"P": 1}}, {"text": "还没想好，看机会", "scores": {"X": 2, "P": 2}}]}, {"q": "如果毕业后能拿到当地身份，但要在那边待至少五年，你会？", "options": [{"text": "愿意，这是好机会", "scores": {"C": 3, "I": 2}}, {"text": "看那边生活能不能适应", "scores": {"X": 2, "P": 1}}, {"text": "有点犹豫，家人在国内", "scores": {"I": -1, "P": 2}}, {"text": "不愿意，我不想把人生绑在一个地方", "scores": {"X": 3, "I": 2}}]}, {"q": "你怎么看「先工作几年再留学」？", "options": [{"text": "支持，有工作经验再去更值", "scores": {"C": 3, "P": 1}}, {"text": "不支持，趁年轻赶紧去", "scores": {"A": 2, "C": 1}}, {"text": "看专业，有的专业越早越好", "scores": {"A": 2, "S": 2}}, {"text": "无所谓，什么时候都不晚", "scores": {"X": 2, "P": 2}}]}, {"q": "留学期间你最想积累什么？", "options": [{"text": "实习和全职工作经验", "scores": {"C": 3}}, {"text": "学术成果和推荐信", "scores": {"A": 3}}, {"text": "跨文化的生活经验", "scores": {"X": 3}}, {"text": "独立解决问题的能力", "scores": {"I": 3}}]}, {"q": "家里给留学准备的总预算大概在哪个区间？", "options": [{"text": "100万以上，不设上限", "scores": {"B": 3, "C": 2}}, {"text": "50-100万", "scores": {"B": 2, "A": 1}}, {"text": "30-50万", "scores": {"B": 1, "A": 1}}, {"text": "30万以内，需要精打细算", "scores": {"B": -2, "P": 1}}]}, {"q": "如果一所学校学费贵 30%，但排名高一档，你会？", "options": [{"text": "贵一点也值得，去读", "scores": {"B": 3, "A": 3}}, {"text": "看这30%能带来什么实际回报", "scores": {"C": 2, "S": 2}}, {"text": "选便宜的，性价比更重要", "scores": {"B": -2, "S": 2}}, {"text": "看能不能申请到奖学金", "scores": {"B": -1, "S": 3}}]}, {"q": "留学期间你打算怎么安排生活费？", "options": [{"text": "按家里给的预算正常花", "scores": {"B": 2}}, {"text": "尽量省，能打工就打工", "scores": {"B": -2, "I": 2}}, {"text": "该花就花，体验更重要", "scores": {"X": 2, "B": 2}}, {"text": "看当地物价再说", "scores": {"P": 2, "S": 1}}]}, {"q": "你怎么看「留学是一笔投资」这句话？", "options": [{"text": "完全同意，要看回报", "scores": {"C": 3, "B": 1}}, {"text": "同意，但不只是钱上的回报", "scores": {"X": 2, "A": 2}}, {"text": "不太认同，留学就是一段经历", "scores": {"X": 3, "P": 2}}, {"text": "看家里经济情况，量力而行", "scores": {"B": -1, "S": 2}}]}, {"q": "一个人在国外生活，你最担心的是？", "options": [{"text": "语言不通、日常沟通费劲", "scores": {"X": 1, "I": 1}}, {"text": "想家，和亲人朋友离得太远", "scores": {"I": -2, "P": 2}}, {"text": "吃不惯当地的食物", "scores": {"I": -1, "X": 1}}, {"text": "其实没什么特别担心的", "scores": {"I": 3, "X": 3}}]}, {"q": "你更希望去一个华人多的地方，还是华人少的地方？", "options": [{"text": "华人多，生活方便，有照应", "scores": {"I": -2, "X": -2}}, {"text": "华人少，能更快融入当地", "scores": {"I": 2, "X": 3}}, {"text": "有点华人就好，不用太多", "scores": {"I": 1, "X": 1}}, {"text": "无所谓，看城市本身", "scores": {"X": 2, "P": 1}}]}, {"q": "如果你在那边遇到很难的事，你会？", "options": [{"text": "自己想办法解决，先不告诉家里", "scores": {"I": 3, "X": 2}}, {"text": "给家里打电话，听听他们的意见", "scores": {"I": -1, "P": 2}}, {"text": "找身边的朋友或学长学姐帮忙", "scores": {"I": 1, "X": 1}}, {"text": "找学校的国际学生办公室", "scores": {"S": 2, "X": 1}}]}, {"q": "你怎么看「离家的距离」？", "options": [{"text": "越远越好，我想彻底独立", "scores": {"I": 3, "X": 2}}, {"text": "2-3小时航程刚好", "scores": {"P": 2, "I": 1}}, {"text": "最好能随时回国，越近越好", "scores": {"I": -2, "P": 2}}, {"text": "看那边的生活是不是我想要的", "scores": {"X": 2, "P": 1}}]}, {"q": "你对当地语言的掌握情况？", "options": [{"text": "英语好，去哪都够用", "scores": {"X": 1, "A": 1}}, {"text": "愿意学一门新语言", "scores": {"X": 3, "A": 2}}, {"text": "只会英语，不想学新语言", "scores": {"X": -1, "P": 2}}, {"text": "英语一般，但敢开口", "scores": {"X": 2, "I": 2}}]}, {"q": "你更想去哪种文化环境？", "options": [{"text": "英语国家，沟通方便", "scores": {"X": -1, "P": 1}}, {"text": "欧洲小语种国家，体验不一样", "scores": {"X": 3, "A": 1}}, {"text": "亚洲国家，文化相近一点", "scores": {"X": -2, "I": 1}}, {"text": "完全陌生的文化，越不一样越好", "scores": {"X": 3, "I": 2}}]}, {"q": "如果当地有一些你完全不理解的习俗，你会？", "options": [{"text": "入乡随俗，尊重就好", "scores": {"X": 3, "I": 1}}, {"text": "研究一下为什么，理解背后的逻辑", "scores": {"A": 3, "S": 2}}, {"text": "保留自己的习惯，不勉强", "scores": {"I": 3, "X": -1}}, {"text": "看情况，能接受就接受", "scores": {"P": 2, "X": 2}}]}, {"q": "你怎么看「留学最重要的收获是眼界」？", "options": [{"text": "非常认同，体验比知识重要", "scores": {"X": 3, "A": -1}}, {"text": "部分认同，知识也很重要", "scores": {"A": 3, "X": 1}}, {"text": "不太认同，学历和就业才是核心", "scores": {"C": 3, "X": -2}}, {"text": "看人，有些人适合体验型留学", "scores": {"S": 2, "X": 1}}]}, {"q": "你更想住在什么样的城市？", "options": [{"text": "大城市，机会多、节奏快", "scores": {"P": 3, "C": 3}}, {"text": "中等城市，方便又不吵", "scores": {"P": 1, "X": 1}}, {"text": "安静小城，慢节奏", "scores": {"P": -2, "X": 2}}, {"text": "看城市本身，无所谓大小", "scores": {"X": 2, "P": 1}}]}, {"q": "如果那边的生活节奏很慢，你会？", "options": [{"text": "太慢了，我会受不了", "scores": {"P": 3, "C": 1}}, {"text": "挺好，正好放松一下", "scores": {"P": -2, "X": 2}}, {"text": "看适应一段时间之后怎么样", "scores": {"X": 2, "S": 1}}, {"text": "慢生活是我的理想状态", "scores": {"P": -3, "X": 2}}]}, {"q": "你理想的周末是什么样的？", "options": [{"text": "参加活动、认识新朋友", "scores": {"X": 2, "P": 2}}, {"text": "一个人在家安静地待着", "scores": {"I": 3, "P": -2}}, {"text": "约几个朋友逛街、吃饭", "scores": {"P": 2, "X": 1}}, {"text": "去周边城市或者自然景区走走", "scores": {"X": 3, "P": -1}}]}, {"q": "你更想在什么样的环境里学习？", "options": [{"text": "图书馆，安静专注", "scores": {"A": 3, "P": -1}}, {"text": "咖啡馆，有点背景噪音", "scores": {"X": 2, "P": 2}}, {"text": "小组讨论室，能和人交流", "scores": {"X": 2, "P": 1}}, {"text": "自己房间，随时能躺", "scores": {"I": 3, "P": -1}}]}, {"q": "你什么时候开始准备留学申请比较好？", "options": [{"text": "越早越好，提前一两年规划", "scores": {"S": 3, "A": 2}}, {"text": "提前一年准备就够", "scores": {"S": 2, "P": 1}}, {"text": "半年左右，速战速决", "scores": {"D": 3, "P": 1}}, {"text": "看情况，快到了再准备", "scores": {"X": 2, "D": 1}}]}, {"q": "选国家的时候，你会怎么做决定？", "options": [{"text": "列一张表，把各项因素都打分", "scores": {"S": 3, "A": 2}}, {"text": "听学长学姐的经验", "scores": {"X": 2, "P": 1}}, {"text": "先定想去的地方，再看学校", "scores": {"D": 2, "X": 2}}, {"text": "和家人一起商量着定", "scores": {"I": -1, "P": 2}}]}, {"q": "如果某所学校的申请结果还没出来，但另一个 offer 快到期了，你会？", "options": [{"text": "先接住这个 offer，稳一点", "scores": {"S": 3, "D": 1}}, {"text": "赌一把，等最想去的那所", "scores": {"D": 3, "C": 2}}, {"text": "打电话问那所学校的进度", "scores": {"S": 2, "C": 2}}, {"text": "看情况，也许先接住再等", "scores": {"X": 2, "P": 1}}]}, {"q": "你怎么看「留学规划」这件事？", "options": [{"text": "必须详细规划，每一步都要安排好", "scores": {"S": 3, "A": 2}}, {"text": "大致有方向就行，细节灵活", "scores": {"X": 2, "S": 1}}, {"text": "规划没用，去了自然有办法", "scores": {"X": 3, "P": 2}}, {"text": "看有没有靠谱的人帮忙规划", "scores": {"I": -1, "S": 1}}]}, {"q": "你更希望和谁一起去留学？", "options": [{"text": "一个人去，完全独立", "scores": {"I": 3, "X": 2}}, {"text": "和朋友一起去，有个伴", "scores": {"I": -2, "P": 2}}, {"text": "和同学一起去，但不一定住一起", "scores": {"I": 1, "P": 2}}, {"text": "无所谓，去那边再认识新朋友", "scores": {"X": 3, "I": 1}}]}, {"q": "如果那边没有认识的人，你会？", "options": [{"text": "没关系，重新开始", "scores": {"I": 3, "X": 3}}, {"text": "有点慌，但会慢慢适应", "scores": {"I": -1, "X": 2}}, {"text": "尽快找当地的华人群体", "scores": {"I": -2, "X": -1}}, {"text": "看学校有没有安排新生群", "scores": {"S": 2, "X": 1}}]}, {"q": "你更希望未来同学是什么样的？", "options": [{"text": "多元背景，来自不同国家", "scores": {"X": 3, "A": 1}}, {"text": "能一起学习、互相监督", "scores": {"A": 3, "P": 1}}, {"text": "有共同爱好、能玩到一起", "scores": {"P": 3, "X": 1}}, {"text": "各过各的，保持距离", "scores": {"I": 3, "X": 1}}]}, {"q": "独自在国外，如果生病了你会？", "options": [{"text": "自己去医院，不麻烦别人", "scores": {"I": 3, "X": 2}}, {"text": "先问朋友有没有推荐", "scores": {"P": 2, "X": 1}}, {"text": "先给家里打电话", "scores": {"I": -2, "P": 2}}, {"text": "看情况，能扛就扛", "scores": {"S": 2, "I": 1}}]}, {"q": "如果让你用一个词形容你理想的留学生活，你会选？", "options": [{"text": "充实", "scores": {"A": 3, "C": 2}}, {"text": "自由", "scores": {"X": 3, "I": 2}}, {"text": "稳当", "scores": {"S": 3, "P": -1}}, {"text": "精彩", "scores": {"X": 2, "P": 3}}]}, {"q": "你更希望留学的城市有什么？", "options": [{"text": "好的就业环境", "scores": {"C": 3, "P": 1}}, {"text": "好的大学", "scores": {"A": 3}}, {"text": "好的自然环境", "scores": {"P": -2, "X": 2}}, {"text": "好的文化生活", "scores": {"X": 3, "P": 1}}]}, {"q": "你怎么看「留学回国之后的发展」？", "options": [{"text": "已经有明确规划", "scores": {"C": 3, "S": 2}}, {"text": "走一步看一步", "scores": {"X": 3}}, {"text": "回国还是有优势的", "scores": {"A": 2, "C": 1}}, {"text": "不太在意，先出去再说", "scores": {"X": 2, "P": 2}}]}, {"q": "你觉得留学对你来说更像？", "options": [{"text": "一段学术训练", "scores": {"A": 3}}, {"text": "一次人生重启", "scores": {"X": 3, "I": 2}}, {"text": "一场投资", "scores": {"C": 3, "B": 1}}, {"text": "一次探险", "scores": {"X": 3, "P": 1}}]}];
+const FIGURES=[{"name": "美国", "desc": "多元、顶尖、竞争激烈、机会多", "keywords": "学术顶尖 / 就业机会多 / 文化冲击大", "scores": {"A": 95, "C": 90, "B": 88, "I": 85, "X": 80, "P": 90}}, {"name": "英国", "desc": "传统、学术强、学制短", "keywords": "学制短 / 学术强 / 文化浓厚", "scores": {"A": 92, "C": 78, "B": 82, "I": 78, "X": 75, "P": 75}}, {"name": "澳大利亚", "desc": "阳光、宜居、移民友好", "keywords": "宜居 / 移民相对容易 / 阳光生活", "scores": {"A": 72, "C": 78, "B": 72, "I": 68, "X": 68, "P": 55}}, {"name": "加拿大", "desc": "稳定、移民友好、性价比高", "keywords": "移民友好 / 社会稳 / 性价比高", "scores": {"A": 78, "C": 88, "B": 68, "I": 72, "X": 68, "P": 55}}, {"name": "日本", "desc": "近、文化独特、秩序感强", "keywords": "离家近 / 文化独特 / 治安好", "scores": {"A": 82, "C": 68, "B": 62, "I": 75, "X": 88, "P": 80}}, {"name": "德国", "desc": "免学费、工程强、严谨", "keywords": "公立免学费 / 工程强 / 治学严谨", "scores": {"A": 85, "C": 72, "B": 45, "I": 85, "X": 80, "P": 65}}, {"name": "法国", "desc": "艺术、人文、浪漫", "keywords": "人文强 / 文化深厚 / 生活讲究", "scores": {"A": 80, "C": 68, "B": 68, "I": 72, "X": 85, "P": 70}}, {"name": "新加坡", "desc": "近、安全、商业导向", "keywords": "离家近 / 安全 / 商业机会多", "scores": {"A": 88, "C": 82, "B": 62, "I": 62, "X": 52, "P": 85}}, {"name": "中国香港", "desc": "近、金融中心、文化相近", "keywords": "离家近 / 金融中心 / 文化相近", "scores": {"A": 85, "C": 75, "B": 62, "I": 58, "X": 48, "P": 88}}, {"name": "新西兰", "desc": "自然、慢节奏、宜居", "keywords": "自然环境好 / 慢节奏 / 移民友好", "scores": {"A": 62, "C": 72, "B": 68, "I": 68, "X": 62, "P": 42}}, {"name": "爱尔兰", "desc": "英语、科技、欧洲门户", "keywords": "英语国家 / 科技行业强 / 欧洲门户", "scores": {"A": 72, "C": 82, "B": 68, "I": 72, "X": 70, "P": 60}}, {"name": "荷兰", "desc": "英语普及、开放、性价比高", "keywords": "英语普及 / 社会开放 / 性价比高", "scores": {"A": 78, "C": 75, "B": 58, "I": 82, "X": 78, "P": 68}}];
+const DIMS={A:"学术导向",C:"职业野心",B:"预算充裕度",I:"独立程度",X:"文化探索",P:"生活节奏"};
+const KEYS=["A","C","B","I","X","P"];
+
+let idx=0, answers=Array(QUESTIONS.length).fill(null);
+
+function startTest(){
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('test').classList.remove('hidden');
+  idx=0;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function renderQ(){
+  const q=QUESTIONS[idx];
+  document.getElementById('qnum').textContent='第 '+(idx+1)+' / '+QUESTIONS.length+' 题';
+  document.getElementById('bar').style.width=((idx+1)/QUESTIONS.length*100)+'%';
+  document.getElementById('qtext').textContent=q.q;
+
+  const box=document.getElementById('opts');
+  box.innerHTML='';
+  q.options.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(answers[idx]===i?' selected':'');
+    b.innerHTML='<span class="opt-key">'+String.fromCharCode(65+i)+'</span>'
+              + '<span class="opt-text">'+o.text+'</span>';
+    b.onclick=()=>{ answers[idx]=i; renderQ(); };
+    box.appendChild(b);
+  });
+
+  document.getElementById('prev').disabled = idx===0;
+  document.getElementById('next').textContent =
+    idx===QUESTIONS.length-1 ? '查看结果' : '下一题';
+}
+
+function prevQ(){ if(idx>0){ idx--; renderQ(); window.scrollTo(0,0); } }
+
+function nextQ(){
+  if(answers[idx]===null){ alert('先选择一个答案哦。'); return; }
+  if(idx<QUESTIONS.length-1){ idx++; renderQ(); window.scrollTo(0,0); }
+  else showResult();
+}
+
+function calcScores(){
+  const raw={A:0,C:0,B:0,I:0,X:0,P:0};
+  answers.forEach((a,i)=>{
+    const s=QUESTIONS[i].options[a].scores;
+    KEYS.forEach(k=>{ raw[k]+=(s[k]||0); });
+  });
+
+  const maxP={A:0,C:0,B:0,I:0,X:0,P:0};
+  const minP={A:0,C:0,B:0,I:0,X:0,P:0};
+  const expP={A:0,C:0,B:0,I:0,X:0,P:0};
+  QUESTIONS.forEach(q=>{
+    KEYS.forEach(k=>{
+      const vals=q.options.map(o=>o.scores[k]||0);
+      maxP[k]+=Math.max.apply(null,vals);
+      minP[k]+=Math.min.apply(null,vals);
+      expP[k]+=vals.reduce((x,y)=>x+y,0)/vals.length;
+    });
+  });
+
+  const out={};
+  KEYS.forEach(k=>{
+    const spanHigh=maxP[k]-expP[k];
+    const spanLow=expP[k]-minP[k];
+    let t;
+    if(raw[k]>=expP[k]) t = spanHigh>0 ? (raw[k]-expP[k])/spanHigh : 0;
+    else t = spanLow>0 ? -(expP[k]-raw[k])/spanLow : 0;
+    out[k]=Math.round(Math.max(0,Math.min(100, 50+50*t)));
+  });
+  return out;
+}
+
+function centerShape(v){
+  const m = KEYS.reduce((s,k)=>s+v[k],0)/KEYS.length;
+  const o={};
+  KEYS.forEach(k=>{ o[k]=v[k]-m; });
+  return o;
+}
+
+function getResult(){
+  const scores=calcScores();
+  const uc=centerShape(scores);
+  const ranked=FIGURES.map(f=>{
+    const fc=centerShape(f.scores);
+    let d=0;
+    KEYS.forEach(k=>{ d+=Math.pow(uc[k]-fc[k],2); });
+    return {f:f, d:Math.sqrt(d)};
+  }).sort((a,b)=>a.d-b.d);
+  return {scores:scores, best:ranked[0].f, second:ranked[1].f, third:ranked[2].f, ranked:ranked};
+}
+
+function showResult(){
+  document.getElementById('test').classList.add('hidden');
+  document.getElementById('result').classList.remove('hidden');
+
+  const r=getResult(), f=r.best;
+  document.getElementById('resultName').textContent=f.name;
+  document.getElementById('resultDesc').textContent=f.desc;
+  document.getElementById('resultTags').innerHTML =
+    f.keywords.split(' / ').map(x=>'<span class="tag">'+x+'</span>').join('');
+
+  const dims=document.getElementById('dims');
+  dims.innerHTML='';
+  KEYS.forEach(k=>{
+    const d=document.createElement('div');
+    d.className='dim';
+    d.innerHTML='<div class="dimtop"><span>'+DIMS[k]+'</span><b>'+r.scores[k]+'</b></div>'
+              + '<div class="track"><div class="fill" style="width:'+r.scores[k]+'%"></div></div>';
+    dims.appendChild(d);
+  });
+
+  const sorted=Object.entries(r.scores).sort((a,b)=>b[1]-a[1]);
+  const high=sorted.slice(0,2).map(x=>DIMS[x[0]]).join(' × ');
+  const low =sorted.slice(-2).map(x=>DIMS[x[0]]).join(' × ');
+  const sim = Math.max(60, Math.min(97, Math.round(100 - r.ranked[0].d * 1.2)));
+
+  document.getElementById('report').innerHTML=
+    '<h2>为什么是'+f.name+'？</h2>'
+  + '<p>你在六个维度中最突出的是 <b>'+high+'</b>，相对偏弱的是 <b>'+low+'</b>。在模型里，你与'+f.name+'的匹配度约为 <b>'+sim+'%</b>。</p>'
+  + '<p>'+f.name+'的核心特点是：'+f.desc+'。这与你当前呈现出来的偏好比较契合。</p>'
+  + '<h2>你的第二、第三选择</h2>'
+  + '<p>如果第一匹配不完全合适，你与 <b>'+r.second.name+'</b>、<b>'+r.third.name+'</b> 也有较高的匹配度，可以作为备选方向。</p>'
+  + '<h2>留学申请建议</h2>'
+  + '<p>'+adviceText(f.name, sorted)+'</p>';
+
+  window.scrollTo(0,0);
+}
+
+function adviceText(country, sorted){
+  const tips={
+    '美国':'美国院校看重综合背景，建议早规划、早考托福/雅思，同时准备好文书和推荐信。',
+    '英国':'英国院校看重学术背景，本科院校和 GPA 是关键。建议提前确认专业方向和语言要求。',
+    '澳大利亚':'澳洲院校录取相对灵活，适合想兼顾移民和生活质量的同学。建议尽早确认移民专业清单。',
+    '加拿大':'加拿大看重综合背景和文书，部分专业有面试。移民政策相对友好，但竞争也在上升。',
+    '日本':'日本需要提前准备日语（一般 N2 起步），部分项目可用英语申请。建议提前 1-2 年规划。',
+    '德国':'德国公立大学学费低，但需要 APS 审核和德语（部分硕士项目英语可申）。流程较长，建议早准备。',
+    '法国':'法国公立大学学费低，部分项目英语授课。高商和艺术院校是热门方向，需要提前准备面试。',
+    '新加坡':'新加坡院校少而精，竞争激烈，看重背景和语言。适合目标明确、背景较强的同学。',
+    '中国香港':'香港院校申请节奏快，看重本科背景和语言成绩。适合想离内地近、又想要国际化环境的同学。',
+    '新西兰':'新西兰环境好、节奏慢，适合想慢节奏生活和移民的同学。但院校选择相对少。',
+    '爱尔兰':'爱尔兰是英语国家，科技和制药行业强。适合想留在欧洲工作、同时不想学新语言的同学。',
+    '荷兰':'荷兰英语普及率高，社会开放，学费相对英美便宜。适合看重性价比和国际化环境的同学。',
+  };
+  return tips[country]||'建议结合你的专业、GPA、语言成绩和预算，和我们顾问做一次针对性评估。';
+}
+
+function handleConsult(){
+  // ============================================================
+  // 这里替换成你们的咨询入口
+  // 例如：window.location.href = 'https://你们的表单链接';
+  // 或者：alert('请添加顾问微信：xiaolanandfriends');
+  // ============================================================
+  alert('请添加顾问微信：xdf85550210\n或扫码进入咨询表单');
+}
+
+function restart(){
+  answers=Array(QUESTIONS.length).fill(null);
+  startTest();
+}
+</script>
+</body>
+</html>
